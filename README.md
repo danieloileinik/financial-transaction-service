@@ -18,8 +18,6 @@ A secure, scalable banking API built with .NET 10 that provides core financial o
 
 ## 🧩 Architecture
 
-![Clean Architecture Diagram](https://www.google.com/url?sa=t&source=web&rct=j&url=https%3A%2F%2Fblog.ndepend.com%2Fclean-architecture-for-asp-net-core-solution%2F&ved=0CBYQjRxqGAoTCPCV5tnbmZIDFQAAAAAdAAAAABCPAQ&opi=89978449)
-
 - **Domain Layer**: Core business logic and entities (`Account`, `Transaction`, value objects)
 - **Application Layer**: Use cases and DTOs (`AccountCreator`, `MoneyTransfer`, etc.)
 - **Infrastructure Layer**: Persistence and security implementations
