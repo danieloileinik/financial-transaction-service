@@ -1,4 +1,4 @@
-name: dotnet build & test
+name: dotnet test & push docker image
 
 on:
   push:
@@ -14,6 +14,20 @@ jobs:
     - name: checkout code
       uses: actions/checkout@v4
 
+    - name: setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '10.0.x'  
+
+    - name: restore dependencies
+      run: dotnet restore
+
+    - name: build
+      run: dotnet build --no-restore
+
+    - name: run tests
+      run: dotnet test --no-build --verbosity normal
+
     - name: set up docker buildx
       uses: docker/setup-buildx-action@v3
 
@@ -24,7 +38,7 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: dotnet build & test
+    - name: build and push docker image
       uses: docker/build-push-action@v5
       with:
         context: .
