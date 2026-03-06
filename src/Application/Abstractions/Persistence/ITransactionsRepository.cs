@@ -5,7 +5,7 @@ namespace Application.Abstractions.Persistence;
 
 public interface ITransactionsRepository
 {
-    void Add(Transaction transaction);
+    Task AddAsync(Transaction transaction);
 
     Task<IReadOnlyList<Transaction>> GetHistoryAsync(
         Guid accountId,

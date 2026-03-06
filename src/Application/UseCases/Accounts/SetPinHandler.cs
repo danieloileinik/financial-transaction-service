@@ -4,9 +4,9 @@ using Application.Extensions;
 using Domain.Errors;
 using ErrorOr;
 
-namespace Application.UseCases;
+namespace Application.UseCases.Accounts;
 
-public class PinSetter(IAccountRepository accountRepository, IUnitOfWork unitOfWork)
+public class SetPinHandler(IAccountRepository accountRepository, IUnitOfWork unitOfWork)
 {
     public async Task<ErrorOr<Success>> Execute(
         Guid accountId,

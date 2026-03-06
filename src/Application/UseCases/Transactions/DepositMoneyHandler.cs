@@ -5,12 +5,12 @@ using Domain.Errors;
 using Domain.Models;
 using ErrorOr;
 
-namespace Application.UseCases;
+namespace Application.UseCases.Transactions;
 
-public class MoneyDeposit(
+public class DepositMoneyHandler(
     IAccountRepository accountRepository,
-    ITransactionsRepository transactionsRepository,
-    IUnitOfWork unitOfWork)
+    ITransactionsRepository transactionsRepository
+)
 {
     public async Task<ErrorOr<Success>> Execute(
         Guid accountId,
@@ -26,8 +26,7 @@ public class MoneyDeposit(
         var result = account.Deposit(money.Value);
         if (result.IsError) return result.FirstError;
 
-        transactionsRepository.Add(new DepositTransaction(accountId, money.Value, DateTime.Now));
-        await unitOfWork.SaveChangesAsync(ct);
+        await transactionsRepository.AddAsync(new DepositTransaction(accountId, money.Value, DateTime.Now));
         return Result.Success;
     }
 }

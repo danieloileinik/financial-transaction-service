@@ -1,6 +1,7 @@
 using Application.Abstractions.Security;
 using Application.Dto.Requests;
 using Application.UseCases;
+using Application.UseCases.Accounts;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Presentation.WebApi;
@@ -10,14 +11,14 @@ namespace Presentation.WebApi;
 public class AuthController(
     ISystemPasswordProvider passwordProvider,
     ITokenService tokenService,
-    AccountAccessor accountAccessor) : ControllerBase
+    AccessAccountHandler accessAccountHandler) : ControllerBase
 {
     [HttpPost("user/atm")]
     public async Task<IActionResult> GetUserJwt(
         [FromBody] UserAuthRequest.UserAtmAuthRequest request,
         [FromQuery] CancellationToken ct = default)
     {
-        var result = await accountAccessor.GetFromAtmAsync(request, ct);
+        var result = await accessAccountHandler.GetFromAtmAsync(request, ct);
         if (result.IsError) return ErrorHandler.Handle(result);
 
         var token = tokenService.GenerateUserToken(request.AccountId);
@@ -29,7 +30,7 @@ public class AuthController(
         [FromBody] UserAuthRequest.UserOnlineAuthRequest request,
         [FromQuery] CancellationToken ct = default)
     {
-        var result = await accountAccessor.GetOnline(request, ct);
+        var result = await accessAccountHandler.GetOnline(request, ct);
         if (result.IsError) return ErrorHandler.Handle(result);
 
         var token = tokenService.GenerateUserToken(request.AccountId);

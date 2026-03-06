@@ -6,12 +6,11 @@ using Domain.Models;
 using Domain.ValueObjects;
 using ErrorOr;
 
-namespace Application.UseCases;
+namespace Application.UseCases.Accounts;
 
-public class AccountCreator(
+public class CreateAccountHandler(
     IAccountRepository accountRepository,
-    IPasswordHasher passwordHasher,
-    IUnitOfWork unitOfWork)
+    IPasswordHasher passwordHasher)
 {
     public async Task<ErrorOr<AccountResponse>> Execute(CancellationToken ct = default)
     {
@@ -22,8 +21,7 @@ public class AccountCreator(
         account.SetPin(pin.Value);
         account.SetPassword(password, passwordHasher);
 
-        accountRepository.Add(account);
-        await unitOfWork.SaveChangesAsync(ct);
+        await accountRepository.AddAsync(account);
 
         return account.ToResponse();
     }

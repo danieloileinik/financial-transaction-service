@@ -1,6 +1,8 @@
 using Application.Dto.Requests;
 using Application.Dto.Responses;
 using Application.UseCases;
+using Application.UseCases.Accounts;
+using Application.UseCases.Transactions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,38 +12,38 @@ namespace Presentation.WebApi;
 [ApiController]
 [Route("api/admin/accounts")]
 public class AdminController(
-    AccountDelete accountDelete,
-    AccountCreator accountCreator,
-    AccountLocker accountLocker,
-    MoneyDeposit moneyDeposit,
-    MoneyWithdraw moneyWithdraw,
-    TransactionsViewer transactionsViewer) : ControllerBase
+    DeleteAccountHandler deleteAccountHandler,
+    CreateAccountHandler createAccountHandler,
+    LockAccountHandler lockAccountHandler,
+    DepositMoneyHandler depositMoneyHandler,
+    WithdrawMoneyHandler withdrawMoneyHandler,
+    ViewTransactionsHandler viewTransactionsHandler) : ControllerBase
 {
     [HttpPost("")]
     public async Task<ActionResult<AccountResponse>> CreateAccount([FromQuery] CancellationToken ct = default)
     {
-        var accountId = await accountCreator.Execute(ct);
+        var accountId = await createAccountHandler.Execute(ct);
         return Ok(accountId.Value);
     }
 
     [HttpPost("{id:guid}/lock")]
     public async Task<IActionResult> LockAccount(Guid id, [FromQuery] CancellationToken ct = default)
     {
-        var result = await accountLocker.Lock(id, ct);
+        var result = await lockAccountHandler.Lock(id, ct);
         return result.IsError ? ErrorHandler.Handle(result) : NoContent();
     }
 
     [HttpPost("{id:guid}/unlock")]
     public async Task<IActionResult> UnlockAccount(Guid id, [FromQuery] CancellationToken ct = default)
     {
-        var result = await accountLocker.Unlock(id, ct);
+        var result = await lockAccountHandler.Unlock(id, ct);
         return result.IsError ? ErrorHandler.Handle(result) : NoContent();
     }
 
     [HttpDelete("{id:guid}")]
     public async Task<IActionResult> DeleteAccount(Guid id)
     {
-        var result = await accountDelete.Execute(id);
+        var result = await deleteAccountHandler.Execute(id);
         return result.IsError ? ErrorHandler.Handle(result) : NoContent();
     }
 
@@ -52,8 +54,8 @@ public class AdminController(
         [FromQuery] CancellationToken ct = default)
     {
         var result = request.Amount <= 0
-            ? await moneyWithdraw.Execute(id, new MoneyOperationRequest(Math.Abs(request.Amount)), ct)
-            : await moneyDeposit.Execute(id, request, ct);
+            ? await withdrawMoneyHandler.Execute(id, new MoneyOperationRequest(Math.Abs(request.Amount)), ct)
+            : await depositMoneyHandler.Execute(id, request, ct);
 
         return result.IsError ? ErrorHandler.Handle(result) : NoContent();
     }
@@ -64,7 +66,7 @@ public class AdminController(
         [FromQuery] TransactionsRequest? request = null,
         CancellationToken ct = default)
     {
-        var result = await transactionsViewer.Execute(id, request, ct);
+        var result = await viewTransactionsHandler.Execute(id, request, ct);
         return result.IsError ? ErrorHandler.Handle(result) : Ok(result.Value);
     }
 }

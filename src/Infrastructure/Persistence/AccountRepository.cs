@@ -7,14 +7,10 @@ namespace Infrastructure.Persistence;
 
 public class AccountRepository(AppDbContext dbContext) : IAccountRepository
 {
-    public void Update(Account account)
-    {
-        dbContext.Accounts.Update(account);
-    }
-
-    public void Add(Account account)
+    public async Task AddAsync(Account account)
     {
         dbContext.Accounts.Add(account);
+        await dbContext.SaveChangesAsync();
     }
 
     public async Task DeleteAsync(Guid id)
