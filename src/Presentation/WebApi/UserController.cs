@@ -3,6 +3,8 @@ using System.Security.Claims;
 using Application.Dto.Requests;
 using Application.Dto.Responses;
 using Application.UseCases;
+using Application.UseCases.Accounts;
+using Application.UseCases.Transactions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,15 +14,15 @@ namespace Presentation.WebApi;
 [ApiController]
 [Route("/api/account")]
 public class UserController(
-    AccountBalanceViewer balanceViewer,
-    MoneyWithdraw moneyWithdraw,
-    MoneyDeposit moneyDeposit,
-    TransactionsViewer transactionsViewer,
-    MoneyTransfer moneyTransfer,
-    PinSetter pinSetter,
-    PasswordSetter passwordSetter,
-    PasswordChanger passwordChanger,
-    AccountDelete accountDelete) : ControllerBase
+    ViewBalanceHandler balanceHandler,
+    WithdrawMoneyHandler withdrawMoneyHandler,
+    DepositMoneyHandler depositMoneyHandler,
+    ViewTransactionsHandler viewTransactionsHandler,
+    TransferMoneyHandler transferMoneyHandler,
+    SetPinHandler setPinHandler,
+    SetPasswordHandler setPasswordHandler,
+    ChangePasswordHandler changePasswordHandler,
+    DeleteAccountHandler deleteAccountHandler) : ControllerBase
 {
     private Guid AccountId
     {
@@ -35,7 +37,7 @@ public class UserController(
     [HttpGet("balance")]
     public async Task<ActionResult<BalanceResponse>> GetBalance([FromQuery] CancellationToken ct = default)
     {
-        var result = await balanceViewer.Execute(AccountId, ct);
+        var result = await balanceHandler.Execute(AccountId, ct);
         return result.IsError ? ErrorHandler.Handle(result) : Ok(result.Value);
     }
 
@@ -44,14 +46,14 @@ public class UserController(
         [FromQuery] TransactionsRequest? request = null,
         CancellationToken ct = default)
     {
-        var result = await transactionsViewer.Execute(AccountId, request, ct);
+        var result = await viewTransactionsHandler.Execute(AccountId, request, ct);
         return result.IsError ? ErrorHandler.Handle(result) : Ok(result.Value);
     }
 
     [HttpDelete("")]
     public async Task<IActionResult> DeleteAccount()
     {
-        var result = await accountDelete.Execute(AccountId);
+        var result = await deleteAccountHandler.Execute(AccountId);
         return result.IsError ? ErrorHandler.Handle(result) : NoContent();
     }
 
@@ -60,7 +62,7 @@ public class UserController(
         [FromBody] SetPinCodeRequest request,
         [FromQuery] CancellationToken ct = default)
     {
-        var result = await pinSetter.Execute(AccountId, request, ct);
+        var result = await setPinHandler.Execute(AccountId, request, ct);
         return result.IsError ? ErrorHandler.Handle(result) : NoContent();
     }
 
@@ -69,7 +71,7 @@ public class UserController(
         [FromBody] SetPasswordRequest request,
         [FromQuery] CancellationToken ct = default)
     {
-        var result = await passwordSetter.Execute(AccountId, request, ct);
+        var result = await setPasswordHandler.Execute(AccountId, request, ct);
         return result.IsError ? ErrorHandler.Handle(result) : NoContent();
     }
 
@@ -78,7 +80,7 @@ public class UserController(
         [FromBody] ChangePasswordRequest request,
         [FromQuery] CancellationToken ct = default)
     {
-        var result = await passwordChanger.Execute(AccountId, request, ct);
+        var result = await changePasswordHandler.Execute(AccountId, request, ct);
         return result.IsError ? ErrorHandler.Handle(result) : NoContent();
     }
 
@@ -87,7 +89,7 @@ public class UserController(
         [FromBody] MoneyOperationRequest request,
         [FromQuery] CancellationToken ct = default)
     {
-        var result = await moneyDeposit.Execute(AccountId, request, ct);
+        var result = await depositMoneyHandler.Execute(AccountId, request, ct);
         return result.IsError ? ErrorHandler.Handle(result) : NoContent();
     }
 
@@ -96,7 +98,7 @@ public class UserController(
         [FromBody] MoneyOperationRequest request,
         [FromQuery] CancellationToken ct = default)
     {
-        var result = await moneyWithdraw.Execute(AccountId, request, ct);
+        var result = await withdrawMoneyHandler.Execute(AccountId, request, ct);
         return result.IsError ? ErrorHandler.Handle(result) : NoContent();
     }
 
@@ -105,7 +107,7 @@ public class UserController(
         [FromBody] TransferRequest request,
         [FromQuery] CancellationToken ct = default)
     {
-        var result = await moneyTransfer.Execute(AccountId, request, ct);
+        var result = await transferMoneyHandler.Execute(AccountId, request, ct);
         return result.IsError ? ErrorHandler.Handle(result) : NoContent();
     }
 }

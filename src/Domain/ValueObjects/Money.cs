@@ -7,12 +7,12 @@ public readonly record struct Money
 {
     private const decimal MaxAmount = 5000000;
 
-    public decimal Amount { get; }
-
     private Money(decimal amount)
     {
         Amount = amount;
     }
+
+    public decimal Amount { get; }
 
     public ErrorOr<Money> DecreaseAmount(Money amount)
     {

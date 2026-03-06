@@ -5,9 +5,7 @@ namespace Application.Abstractions.Persistence;
 
 public interface IAccountRepository
 {
-    void Update(Account account);
-
-    void Add(Account account);
+    Task AddAsync(Account account);
 
     Task DeleteAsync(Guid id);
 

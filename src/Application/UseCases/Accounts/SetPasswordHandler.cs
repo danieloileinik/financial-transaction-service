@@ -4,24 +4,22 @@ using Domain;
 using Domain.Errors;
 using ErrorOr;
 
-namespace Application.UseCases;
+namespace Application.UseCases.Accounts;
 
-public class PasswordChanger(
+public class SetPasswordHandler(
     IAccountRepository accountRepository,
-    IUnitOfWork unitOfWork,
-    IPasswordHasher passwordHasher)
+    IPasswordHasher passwordHasher,
+    IUnitOfWork unitOfWork)
 {
     public async Task<ErrorOr<Success>> Execute(
         Guid accountId,
-        ChangePasswordRequest request,
+        SetPasswordRequest request,
         CancellationToken ct = default)
     {
         var account = await accountRepository.GetByIdAsync(accountId, ct);
         if (account is null) return AccountErrors.NotFound(accountId);
 
-        var result = account.ChangePassword(request.OldPassword, request.NewPassword, passwordHasher);
-        if (result.IsError) return result.FirstError;
-
+        account.SetPassword(request.Password, passwordHasher);
         await unitOfWork.SaveChangesAsync(ct);
         return Result.Success;
     }

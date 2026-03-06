@@ -8,12 +8,12 @@ public readonly record struct PinCode
 {
     private const int Length = 4;
 
-    public string Value { get; }
-
     private PinCode(string value)
     {
         Value = value;
     }
+
+    public string Value { get; }
 
     public static ErrorOr<PinCode> Create(string value)
     {

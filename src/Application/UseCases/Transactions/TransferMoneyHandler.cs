@@ -5,9 +5,9 @@ using Domain.Errors;
 using Domain.Models;
 using ErrorOr;
 
-namespace Application.UseCases;
+namespace Application.UseCases.Transactions;
 
-public class MoneyTransfer(
+public class TransferMoneyHandler(
     IAccountRepository accountRepository,
     ITransactionsRepository transactionsRepository,
     IUnitOfWork unitOfWork)
@@ -27,11 +27,11 @@ public class MoneyTransfer(
 
         var result = senderAccount.Withdraw(amount);
         if (result.IsError) return result.FirstError;
-        transactionsRepository.Add(new WithdrawTransaction(sender, amount, DateTime.Now));
+        await transactionsRepository.AddAsync(new WithdrawTransaction(sender, amount, DateTime.Now));
 
         result = receiverAccount.Deposit(amount);
         if (result.IsError) return result.FirstError;
-        transactionsRepository.Add(new DepositTransaction(receiver, amount, DateTime.Now));
+        await transactionsRepository.AddAsync(new DepositTransaction(receiver, amount, DateTime.Now));
 
         await unitOfWork.SaveChangesAsync(ct);
 

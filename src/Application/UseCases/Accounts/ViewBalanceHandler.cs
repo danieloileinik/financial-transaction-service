@@ -3,9 +3,9 @@ using Application.Dto.Responses;
 using Domain.Errors;
 using ErrorOr;
 
-namespace Application.UseCases;
+namespace Application.UseCases.Accounts;
 
-public class AccountBalanceViewer(IAccountRepository accountRepository)
+public class ViewBalanceHandler(IAccountRepository accountRepository)
 {
     public async Task<ErrorOr<BalanceResponse>> Execute(Guid id, CancellationToken ct = default)
     {

@@ -2,9 +2,9 @@ using Application.Abstractions.Persistence;
 using Domain.Errors;
 using ErrorOr;
 
-namespace Application.UseCases;
+namespace Application.UseCases.Accounts;
 
-public class AccountDelete(IAccountRepository accountRepository)
+public class DeleteAccountHandler(IAccountRepository accountRepository)
 {
     public async Task<ErrorOr<Success>> Execute(Guid accountId)
     {

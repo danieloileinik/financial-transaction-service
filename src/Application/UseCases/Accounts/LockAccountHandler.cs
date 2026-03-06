@@ -2,9 +2,9 @@ using Application.Abstractions.Persistence;
 using Domain.Errors;
 using ErrorOr;
 
-namespace Application.UseCases;
+namespace Application.UseCases.Accounts;
 
-public class AccountLocker(IAccountRepository accountRepository, IUnitOfWork unitOfWork)
+public class LockAccountHandler(IAccountRepository accountRepository, IUnitOfWork unitOfWork)
 {
     public async Task<ErrorOr<Success>> Lock(Guid accountId, CancellationToken ct = default)
     {

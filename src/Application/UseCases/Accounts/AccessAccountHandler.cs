@@ -5,9 +5,9 @@ using Domain;
 using Domain.Errors;
 using ErrorOr;
 
-namespace Application.UseCases;
+namespace Application.UseCases.Accounts;
 
-public class AccountAccessor(IAccountRepository accountRepository, IPasswordHasher passwordHasher)
+public class AccessAccountHandler(IAccountRepository accountRepository, IPasswordHasher passwordHasher)
 {
     public async Task<ErrorOr<Success>> GetFromAtmAsync(
         UserAuthRequest.UserAtmAuthRequest request,

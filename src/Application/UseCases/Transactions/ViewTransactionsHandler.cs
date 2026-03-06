@@ -5,9 +5,11 @@ using Application.Extensions;
 using Domain.Errors;
 using ErrorOr;
 
-namespace Application.UseCases;
+namespace Application.UseCases.Transactions;
 
-public class TransactionsViewer(IAccountRepository accountRepository, ITransactionsRepository transactionsRepository)
+public class ViewTransactionsHandler(
+    IAccountRepository accountRepository,
+    ITransactionsRepository transactionsRepository)
 {
     public async Task<ErrorOr<TransactionsResponse>> Execute(
         Guid accountId,

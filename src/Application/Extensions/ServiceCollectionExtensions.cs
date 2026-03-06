@@ -1,4 +1,6 @@
 ﻿using Application.UseCases;
+using Application.UseCases.Accounts;
+using Application.UseCases.Transactions;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Application.Extensions;
@@ -8,18 +10,18 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddApplication(this IServiceCollection serviceCollection)
     {
         serviceCollection
-            .AddScoped<AccountAccessor>()
-            .AddScoped<AccountBalanceViewer>()
-            .AddScoped<AccountCreator>()
-            .AddScoped<AccountDelete>()
-            .AddScoped<AccountLocker>()
-            .AddScoped<MoneyWithdraw>()
-            .AddScoped<MoneyDeposit>()
-            .AddScoped<MoneyTransfer>()
-            .AddScoped<PasswordChanger>()
-            .AddScoped<PasswordSetter>()
-            .AddScoped<PinSetter>()
-            .AddScoped<TransactionsViewer>();
+            .AddScoped<AccessAccountHandler>()
+            .AddScoped<ViewBalanceHandler>()
+            .AddScoped<CreateAccountHandler>()
+            .AddScoped<DeleteAccountHandler>()
+            .AddScoped<LockAccountHandler>()
+            .AddScoped<WithdrawMoneyHandler>()
+            .AddScoped<DepositMoneyHandler>()
+            .AddScoped<TransferMoneyHandler>()
+            .AddScoped<ChangePasswordHandler>()
+            .AddScoped<SetPasswordHandler>()
+            .AddScoped<SetPinHandler>()
+            .AddScoped<ViewTransactionsHandler>();
 
         return serviceCollection;
     }

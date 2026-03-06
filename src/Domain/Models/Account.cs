@@ -11,12 +11,6 @@ public class Account
 
     private PinCode? _pinCode;
 
-    public Guid Id { get; } = Guid.NewGuid();
-
-    public Money Balance { get; private set; }
-
-    public bool IsLocked { get; private set; }
-
     public Account()
     {
         var money = Money.Create(0);
@@ -27,6 +21,12 @@ public class Account
     {
         Balance = balance;
     }
+
+    public Guid Id { get; } = Guid.NewGuid();
+
+    public Money Balance { get; private set; }
+
+    public bool IsLocked { get; private set; }
 
     public void Lock()
     {

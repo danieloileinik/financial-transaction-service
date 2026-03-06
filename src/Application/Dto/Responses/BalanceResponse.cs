@@ -2,8 +2,6 @@
 
 public class BalanceResponse
 {
-    public decimal Balance { get; }
-
     public BalanceResponse(decimal balance)
     {
         Balance = balance;
@@ -12,4 +10,6 @@ public class BalanceResponse
     public BalanceResponse()
     {
     }
+
+    public decimal Balance { get; }
 }
