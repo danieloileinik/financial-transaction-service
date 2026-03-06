@@ -1,6 +1,5 @@
 using Application.Abstractions.Security;
 using Application.Dto.Requests;
-using Application.UseCases;
 using Application.UseCases.Accounts;
 using Microsoft.AspNetCore.Mvc;
 

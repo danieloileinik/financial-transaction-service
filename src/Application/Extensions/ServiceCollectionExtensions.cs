@@ -1,5 +1,4 @@
-﻿using Application.UseCases;
-using Application.UseCases.Accounts;
+﻿using Application.UseCases.Accounts;
 using Application.UseCases.Transactions;
 using Microsoft.Extensions.DependencyInjection;
 

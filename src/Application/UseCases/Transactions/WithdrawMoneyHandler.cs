@@ -9,7 +9,8 @@ namespace Application.UseCases.Transactions;
 
 public class WithdrawMoneyHandler(
     IAccountRepository accountRepository,
-    ITransactionsRepository transactionsRepository)
+    ITransactionsRepository transactionsRepository,
+    IUnitOfWork unitOfWork)
 {
     public async Task<ErrorOr<Success>> Execute(
         Guid accountId,
@@ -25,8 +26,9 @@ public class WithdrawMoneyHandler(
         var result = account.Withdraw(money.Value);
         if (result.IsError) return result.FirstError;
 
-        await transactionsRepository.AddAsync(new WithdrawTransaction(accountId, money.Value, DateTime.Now));
+        transactionsRepository.Add(new WithdrawTransaction(accountId, money.Value, DateTime.Now));
 
+        await unitOfWork.SaveChangesAsync(ct);
         return Result.Success;
     }
 }

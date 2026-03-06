@@ -9,8 +9,8 @@ namespace Application.UseCases.Transactions;
 
 public class DepositMoneyHandler(
     IAccountRepository accountRepository,
-    ITransactionsRepository transactionsRepository
-)
+    ITransactionsRepository transactionsRepository,
+    IUnitOfWork unitOfWork)
 {
     public async Task<ErrorOr<Success>> Execute(
         Guid accountId,
@@ -25,8 +25,9 @@ public class DepositMoneyHandler(
 
         var result = account.Deposit(money.Value);
         if (result.IsError) return result.FirstError;
+        transactionsRepository.Add(new DepositTransaction(accountId, money.Value, DateTime.Now));
 
-        await transactionsRepository.AddAsync(new DepositTransaction(accountId, money.Value, DateTime.Now));
+        await unitOfWork.SaveChangesAsync(ct);
         return Result.Success;
     }
 }

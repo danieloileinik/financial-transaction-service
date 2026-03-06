@@ -27,14 +27,13 @@ public class TransferMoneyHandler(
 
         var result = senderAccount.Withdraw(amount);
         if (result.IsError) return result.FirstError;
-        await transactionsRepository.AddAsync(new WithdrawTransaction(sender, amount, DateTime.Now));
+        transactionsRepository.Add(new WithdrawTransaction(sender, amount, DateTime.Now));
 
         result = receiverAccount.Deposit(amount);
         if (result.IsError) return result.FirstError;
-        await transactionsRepository.AddAsync(new DepositTransaction(receiver, amount, DateTime.Now));
+        transactionsRepository.Add(new DepositTransaction(receiver, amount, DateTime.Now));
 
         await unitOfWork.SaveChangesAsync(ct);
-
         return Result.Success;
     }
 }
