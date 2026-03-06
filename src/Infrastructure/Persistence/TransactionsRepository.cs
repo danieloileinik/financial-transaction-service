@@ -7,10 +7,9 @@ namespace Infrastructure.Persistence;
 
 public class TransactionsRepository(AppDbContext dbContext) : ITransactionsRepository
 {
-    public async Task AddAsync(Transaction transaction)
+    public void Add(Transaction transaction)
     {
         dbContext.Transactions.Add(transaction);
-        await dbContext.SaveChangesAsync();
     }
 
     public async Task<IReadOnlyList<Transaction>> GetHistoryAsync(

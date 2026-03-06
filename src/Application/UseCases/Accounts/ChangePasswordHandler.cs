@@ -8,7 +8,8 @@ namespace Application.UseCases.Accounts;
 
 public class ChangePasswordHandler(
     IAccountRepository accountRepository,
-    IPasswordHasher passwordHasher)
+    IPasswordHasher passwordHasher,
+    IUnitOfWork unitOfWork)
 {
     public async Task<ErrorOr<Success>> Execute(
         Guid accountId,
@@ -20,6 +21,8 @@ public class ChangePasswordHandler(
 
         var result = account.ChangePassword(request.OldPassword, request.NewPassword, passwordHasher);
         if (result.IsError) return result.FirstError;
+
+        await unitOfWork.SaveChangesAsync(ct);
 
         return Result.Success;
     }

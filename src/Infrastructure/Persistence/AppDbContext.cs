@@ -19,6 +19,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             entity.ToTable("Accounts");
             entity.HasKey(a => a.Id);
             entity.Property(a => a.Id).ValueGeneratedNever();
+            entity.Property<bool>("IsDeleted");
+            entity.HasQueryFilter(a => !EF.Property<bool>(a, "IsDeleted"));
 
             entity.Property(a => a.IsLocked);
 

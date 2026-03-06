@@ -10,7 +10,8 @@ namespace Application.UseCases.Accounts;
 
 public class CreateAccountHandler(
     IAccountRepository accountRepository,
-    IPasswordHasher passwordHasher)
+    IPasswordHasher passwordHasher,
+    IUnitOfWork unitOfWork)
 {
     public async Task<ErrorOr<AccountResponse>> Execute(CancellationToken ct = default)
     {
@@ -21,7 +22,9 @@ public class CreateAccountHandler(
         account.SetPin(pin.Value);
         account.SetPassword(password, passwordHasher);
 
-        await accountRepository.AddAsync(account);
+        accountRepository.Add(account);
+
+        await unitOfWork.SaveChangesAsync(ct);
 
         return account.ToResponse();
     }

@@ -7,15 +7,17 @@ namespace Infrastructure.Persistence;
 
 public class AccountRepository(AppDbContext dbContext) : IAccountRepository
 {
-    public async Task AddAsync(Account account)
+    public void Add(Account account)
     {
         dbContext.Accounts.Add(account);
-        await dbContext.SaveChangesAsync();
     }
 
     public async Task DeleteAsync(Guid id)
     {
-        await dbContext.Accounts.Where(a => a.Id == id).ExecuteDeleteAsync();
+        await dbContext.Accounts.Where(a => a.Id == id)
+            .ExecuteUpdateAsync(s => s.SetProperty(
+                a => EF.Property<bool>(a, "IsDeleted"),
+                true));
     }
 
     public async Task<BalanceResponse?> GetBalanceAsync(Guid id, CancellationToken ct = default)

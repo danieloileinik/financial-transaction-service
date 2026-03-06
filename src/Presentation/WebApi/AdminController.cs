@@ -1,6 +1,5 @@
 using Application.Dto.Requests;
 using Application.Dto.Responses;
-using Application.UseCases;
 using Application.UseCases.Accounts;
 using Application.UseCases.Transactions;
 using Microsoft.AspNetCore.Authorization;
