@@ -24,14 +24,16 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
 
             entity.Property(a => a.IsLocked);
 
-            entity.Property(a => a.Balance)
+            entity
+                .Property(a => a.Balance)
                 .HasColumnName("Balance")
                 .HasPrecision(18, 2)
                 .HasConversion(
                     b => b.Amount,
                     a => Money.Create(a).Value);
 
-            entity.Property<PinCode?>("_pinCode")
+            entity
+                .Property<PinCode?>("_pinCode")
                 .HasColumnName("PinCode")
                 .HasMaxLength(4)
                 .IsRequired(false)
@@ -39,7 +41,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
                     p => p == null ? null : p.Value.Value,
                     v => v == null ? null : PinCode.Create(v).Value);
 
-            entity.Property<PasswordHash?>("_password")
+            entity
+                .Property<PasswordHash?>("_password")
                 .HasColumnName("PasswordHash")
                 .IsRequired(false)
                 .HasConversion(
@@ -57,17 +60,20 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             entity.Property(t => t.AccountId);
             entity.Property(t => t.Timestamp).IsRequired();
 
-            entity.Property(t => t.Amount)
+            entity
+                .Property(t => t.Amount)
                 .HasConversion(
                     m => m.Amount,
                     d => Money.Create(d).Value)
                 .HasPrecision(18, 2);
 
-            entity.HasDiscriminator<string>("TransactionType")
+            entity
+                .HasDiscriminator<string>("TransactionType")
                 .HasValue<DepositTransaction>("Deposit")
                 .HasValue<WithdrawTransaction>("Withdraw");
 
-            entity.HasIndex(t => new { t.AccountId, t.Timestamp })
+            entity
+                .HasIndex(t => new { t.AccountId, t.Timestamp })
                 .IsDescending();
 
             entity.HasIndex(t => t.AccountId);

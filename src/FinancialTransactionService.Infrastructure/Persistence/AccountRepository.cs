@@ -14,7 +14,9 @@ public class AccountRepository(AppDbContext dbContext) : IAccountRepository
 
     public async Task DeleteAsync(Guid id)
     {
-        await dbContext.Accounts.Where(a => a.Id == id)
+        await dbContext
+            .Accounts
+            .Where(a => a.Id == id)
             .ExecuteUpdateAsync(s => s.SetProperty(
                 a => EF.Property<bool>(a, "IsDeleted"),
                 true));
@@ -22,7 +24,8 @@ public class AccountRepository(AppDbContext dbContext) : IAccountRepository
 
     public async Task<BalanceResponse?> GetBalanceAsync(Guid id, CancellationToken ct = default)
     {
-        return await dbContext.Accounts
+        return await dbContext
+            .Accounts
             .AsNoTracking()
             .Where(a => a.Id == id)
             .Select(a => new BalanceResponse(a.Balance.Amount))
