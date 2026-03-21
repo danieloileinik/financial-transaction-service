@@ -4,15 +4,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{6488AD21-B4B
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{F2AF99C7-41B1-41BE-95B6-7DCDF61D47B1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "src\Application\Application.csproj", "{EC33C4AD-7CE1-4FCB-BC70-3FFD3C268E03}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FinancialTransactionService.Application", "src\FinancialTransactionService.Application\FinancialTransactionService.Application.csproj", "{EC33C4AD-7CE1-4FCB-BC70-3FFD3C268E03}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "src\Domain\Domain.csproj", "{43916C72-BBF3-4ABC-BA58-7D668C760032}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FinancialTransactionService.Domain", "src\FinancialTransactionService.Domain\FinancialTransactionService.Domain.csproj", "{43916C72-BBF3-4ABC-BA58-7D668C760032}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "src\Infrastructure\Infrastructure.csproj", "{4EBED212-6F81-49A2-B500-1F191586C80F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FinancialTransactionService.Infrastructure", "src\FinancialTransactionService.Infrastructure\FinancialTransactionService.Infrastructure.csproj", "{4EBED212-6F81-49A2-B500-1F191586C80F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Presentation", "src\Presentation\Presentation.csproj", "{D13F4AE3-4D2B-4B01-A5DF-C0560266C685}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FinancialTransactionService.Presentation", "src\FinancialTransactionService.Presentation\FinancialTransactionService.Presentation.csproj", "{D13F4AE3-4D2B-4B01-A5DF-C0560266C685}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "tests\Tests\Tests.csproj", "{B8331A2B-8B16-49A3-9595-445E633C11FE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FinancialTransactionService.Tests", "tests\FinancialTransactionService.Tests\FinancialTransactionService.Tests.csproj", "{B8331A2B-8B16-49A3-9595-445E633C11FE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
