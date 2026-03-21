@@ -17,7 +17,9 @@ public class TransactionsRepository(AppDbContext dbContext) : ITransactionsRepos
         TransactionsRequest? request = null,
         CancellationToken ct = default)
     {
-        var query = dbContext.Transactions.AsNoTracking()
+        var query = dbContext
+            .Transactions
+            .AsNoTracking()
             .Where(t => t.AccountId == accountId);
         if (request is not null) query = query.Where(t => t.Timestamp >= request.From && t.Timestamp <= request.To);
 

@@ -1,5 +1,5 @@
 #nullable enable
-using System.Data.Common;
+using System;
 using System.Threading.Tasks;
 using FinancialTransactionService.Application.Abstractions.Security;
 using FinancialTransactionService.Infrastructure.Persistence;
@@ -7,30 +7,33 @@ using FinancialTransactionService.Infrastructure.Security;
 using FinancialTransactionService.Presentation;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Testcontainers.PostgreSql;
 using Xunit;
 
 namespace FinancialTransactionService.Tests;
 
 public class CustomWebApplicationFactory : WebApplicationFactory<Program>, IAsyncLifetime
 {
-    private DbConnection? _connection;
+    private PostgreSqlContainer? _postgresContainer;
 
+    [Obsolete("Obsolete")]
     public async Task InitializeAsync()
     {
-        using var scope = Services.CreateScope();
-        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-        await db.Database.EnsureDeletedAsync();
-        await db.Database.EnsureCreatedAsync();
+        _postgresContainer = new PostgreSqlBuilder()
+            .WithDatabase("testdb")
+            .WithUsername("testuser")
+            .WithPassword("testpass")
+            .Build();
+
+        await _postgresContainer.StartAsync();
     }
 
     public new async Task DisposeAsync()
     {
-        if (_connection != null) await _connection.DisposeAsync();
+        if (_postgresContainer != null) await _postgresContainer.DisposeAsync();
     }
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
@@ -38,15 +41,12 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>, IAsyn
         builder.ConfigureServices(services =>
         {
             services.RemoveAll(typeof(DbContextOptions<AppDbContext>));
-            services.RemoveAll(typeof(IDbContextPool<AppDbContext>));
-            services.RemoveAll(typeof(IDbContextFactory<AppDbContext>));
-            services.RemoveAll(typeof(IScopedDbContextLease<AppDbContext>));
             services.RemoveAll(typeof(AppDbContext));
 
-            _connection = new SqliteConnection("Data Source=:memory:");
-            _connection.Open();
+            var connectionString = _postgresContainer?.GetConnectionString()
+                                   ?? "Host=localhost;Port=5432;Database=testdb;Username=testuser;Password=testpass";
 
-            services.AddDbContext<AppDbContext>(options => { options.UseSqlite(_connection); });
+            services.AddDbContextPool<AppDbContext>(options => { options.UseNpgsql(connectionString); });
 
             services.AddSingleton<ISystemPasswordProvider>(_ => new SystemPasswordProvider("TestAdminPassword"));
         });

@@ -18,7 +18,7 @@ public static class ServiceCollectionExtensions
         serviceCollection
             .AddDbContextPool<AppDbContext>(options =>
             {
-                options.UseSqlite(configuration.GetConnectionString("DefaultConnection"));
+                options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"));
             })
             .AddScoped<IAccountRepository, AccountRepository>()
             .AddScoped<ITransactionsRepository, TransactionsRepository>()

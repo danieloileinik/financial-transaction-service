@@ -17,7 +17,9 @@ public class Program
 
         var jwtSettings = builder.Configuration.GetSection("JwtSettings");
         builder.Services.Configure<JwtSettings>(jwtSettings);
-        builder.Services.AddAuthentication(options =>
+        builder
+            .Services
+            .AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -42,7 +44,8 @@ public class Program
             options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
         });
 
-        builder.Services
+        builder
+            .Services
             .AddApplication()
             .AddInfrastructure(builder.Configuration)
             .AddSingleton<ISystemPasswordProvider>(_ =>
