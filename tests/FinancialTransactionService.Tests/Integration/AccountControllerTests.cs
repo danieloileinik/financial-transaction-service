@@ -12,7 +12,7 @@ using Xunit;
 
 namespace FinancialTransactionService.Tests.Integration;
 
-public class UserControllerTests(CustomWebApplicationFactory factory) : IClassFixture<CustomWebApplicationFactory>
+public class AccountControllerTests(CustomWebApplicationFactory factory) : IClassFixture<CustomWebApplicationFactory>
 {
     [Fact]
     public async Task GetBalance_AsUser_Returns200WithBalance()

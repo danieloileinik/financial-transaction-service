@@ -3,7 +3,7 @@ using FinancialTransactionService.Application.Dto.Requests;
 using FinancialTransactionService.Application.UseCases.Accounts;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FinancialTransactionService.Presentation.WebApi;
+namespace FinancialTransactionService.Presentation.Controllers;
 
 [ApiController]
 [Route("/api/auth")]

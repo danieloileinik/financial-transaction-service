@@ -5,7 +5,7 @@ using FinancialTransactionService.Application.UseCases.Transactions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FinancialTransactionService.Presentation.WebApi;
+namespace FinancialTransactionService.Presentation.Controllers;
 
 [Authorize(Policy = "AdminOnly")]
 [ApiController]
@@ -26,7 +26,7 @@ public class AdminController(
     }
 
     [HttpPost("{id:guid}/lock")]
-    public async Task<IActionResult> LockAccount(Guid id, [FromQuery] CancellationToken ct = default)
+    public async Task<IActionResult> LockAccount([FromHeader] Guid id, [FromQuery] CancellationToken ct = default)
     {
         var result = await lockAccountHandler.Lock(id, ct);
         return result.IsError ? ErrorHandler.Handle(result) : NoContent();

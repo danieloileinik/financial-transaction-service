@@ -7,12 +7,12 @@ using FinancialTransactionService.Application.UseCases.Transactions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FinancialTransactionService.Presentation.WebApi;
+namespace FinancialTransactionService.Presentation.Controllers;
 
 [Authorize]
 [ApiController]
-[Route("/api/account")]
-public class UserController(
+[Route("/api/accounts")]
+public class AccountController(
     ViewBalanceHandler balanceHandler,
     WithdrawMoneyHandler withdrawMoneyHandler,
     DepositMoneyHandler depositMoneyHandler,
@@ -34,7 +34,7 @@ public class UserController(
     }
 
     [HttpGet("balance")]
-    public async Task<ActionResult<BalanceResponse>> GetBalance([FromQuery] CancellationToken ct = default)
+    public async Task<ActionResult<BalanceResponse>> GetBalance(Guid id,[FromQuery] CancellationToken ct = default)
     {
         var result = await balanceHandler.Execute(AccountId, ct);
         return result.IsError ? ErrorHandler.Handle(result) : Ok(result.Value);
@@ -47,13 +47,6 @@ public class UserController(
     {
         var result = await viewTransactionsHandler.Execute(AccountId, request, ct);
         return result.IsError ? ErrorHandler.Handle(result) : Ok(result.Value);
-    }
-
-    [HttpDelete("")]
-    public async Task<IActionResult> DeleteAccount()
-    {
-        var result = await deleteAccountHandler.Execute(AccountId);
-        return result.IsError ? ErrorHandler.Handle(result) : NoContent();
     }
 
     [HttpPut("pin")]
