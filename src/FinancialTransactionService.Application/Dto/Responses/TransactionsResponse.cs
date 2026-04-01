@@ -2,5 +2,5 @@
 
 public record TransactionsResponse(IReadOnlyList<TransactionsResponse.TransactionResponse> Transactions)
 {
-    public record TransactionResponse(string Type, decimal Amount, DateTime Timestamp);
+    public record TransactionResponse(string Type, decimal Amount, DateTimeOffset Timestamp);
 }

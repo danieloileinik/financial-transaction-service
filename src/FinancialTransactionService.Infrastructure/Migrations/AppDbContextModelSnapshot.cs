@@ -64,7 +64,7 @@ namespace FinancialTransactionService.Infrastructure.Migrations
                         .HasPrecision(18, 2)
                         .HasColumnType("numeric(18,2)");
 
-                    b.Property<DateTime>("Timestamp")
+                    b.Property<DateTimeOffset>("Timestamp")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("TransactionType")
@@ -82,6 +82,7 @@ namespace FinancialTransactionService.Infrastructure.Migrations
                     b.ToTable("Transactions", (string)null);
 
                     b.HasDiscriminator<string>("TransactionType").HasValue("Transaction");
+
                     b.UseTphMappingStrategy();
                 });
 

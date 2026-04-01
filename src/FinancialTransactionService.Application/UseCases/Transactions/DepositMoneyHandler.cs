@@ -25,7 +25,7 @@ public class DepositMoneyHandler(
 
         var result = account.Deposit(money.Value);
         if (result.IsError) return result.FirstError;
-        transactionsRepository.Add(new DepositTransaction(accountId, money.Value, DateTime.Now));
+        transactionsRepository.Add(new DepositTransaction(accountId, money.Value, DateTimeOffset.UtcNow));
 
         await unitOfWork.SaveChangesAsync(ct);
         return Result.Success;

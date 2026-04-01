@@ -26,7 +26,7 @@ public class AdminAccountController(
     }
 
     [HttpPost("{id:guid}/lock")]
-    public async Task<IActionResult> LockAccount([FromHeader] Guid id, [FromQuery] CancellationToken ct = default)
+    public async Task<IActionResult> LockAccount([FromRoute] Guid id, [FromQuery] CancellationToken ct = default)
     {
         var result = await lockAccountHandler.Lock(id, ct);
         return result.IsError ? ErrorHandler.Handle(result) : NoContent();

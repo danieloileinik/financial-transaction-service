@@ -26,7 +26,7 @@ public class WithdrawMoneyHandler(
         var result = account.Withdraw(money.Value);
         if (result.IsError) return result.FirstError;
 
-        transactionsRepository.Add(new WithdrawTransaction(accountId, money.Value, DateTime.Now));
+        transactionsRepository.Add(new WithdrawTransaction(accountId, money.Value, DateTimeOffset.UtcNow));
 
         await unitOfWork.SaveChangesAsync(ct);
         return Result.Success;

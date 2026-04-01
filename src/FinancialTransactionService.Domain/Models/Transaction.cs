@@ -3,7 +3,7 @@ using FinancialTransactionService.Domain.ValueObjects;
 
 namespace FinancialTransactionService.Domain.Models;
 
-public abstract class Transaction(Guid accountId, Money amount, DateTime timestamp)
+public abstract class Transaction(Guid accountId, Money amount, DateTimeOffset timestamp)
 {
     public Guid Id { get; private set; } = Guid.NewGuid();
 
@@ -11,15 +11,11 @@ public abstract class Transaction(Guid accountId, Money amount, DateTime timesta
 
     public Money Amount { get; private set; } = amount;
 
-    public DateTime Timestamp { get; private set; } = timestamp;
-
-    // protected Transaction()
-    // {
-    // } 
+    public DateTimeOffset Timestamp { get; private set; } = timestamp;
 }
 
-public class DepositTransaction(Guid accountId, Money amount, DateTime timestamp)
+public class DepositTransaction(Guid accountId, Money amount, DateTimeOffset timestamp)
     : Transaction(accountId, amount, timestamp);
 
-public class WithdrawTransaction(Guid accountId, Money amount, DateTime timestamp)
+public class WithdrawTransaction(Guid accountId, Money amount, DateTimeOffset timestamp)
     : Transaction(accountId, amount, timestamp);

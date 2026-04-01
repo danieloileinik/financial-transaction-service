@@ -34,7 +34,7 @@ public class AccountController(
     }
 
     [HttpGet("balance")]
-    public async Task<ActionResult<BalanceResponse>> GetBalance(Guid id,[FromQuery] CancellationToken ct = default)
+    public async Task<ActionResult<BalanceResponse>> GetBalance(Guid id, [FromQuery] CancellationToken ct = default)
     {
         var result = await balanceHandler.Execute(AccountId, ct);
         return result.IsError ? ErrorHandler.Handle(result) : Ok(result.Value);

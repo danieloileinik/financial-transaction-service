@@ -1,3 +1,3 @@
 namespace FinancialTransactionService.Application.Dto.Requests;
 
-public record TransactionsRequest(DateTime From, DateTime To);
+public record TransactionsRequest(DateTimeOffset From, DateTimeOffset To);
