@@ -65,10 +65,7 @@ bash
 
 dotnet test
 
-API Documentation
 
-All API endpoints are prefixed with /api. Authentication is required for most endpoints using Bearer JWT tokens.
-Authentication
 User ATM Authentication
 
 Authenticates a user via ATM interface using account ID and PIN code.
