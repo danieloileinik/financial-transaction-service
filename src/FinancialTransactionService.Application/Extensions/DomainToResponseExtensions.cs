@@ -1,16 +1,10 @@
 using FinancialTransactionService.Application.Dto.Responses;
 using FinancialTransactionService.Domain.Models;
-using FinancialTransactionService.Domain.ValueObjects;
 
 namespace FinancialTransactionService.Application.Extensions;
 
 public static class DomainToResponseExtensions
 {
-    public static BalanceResponse ToResponse(this Money money)
-    {
-        return new BalanceResponse(money.Amount);
-    }
-
     public static AccountResponse ToResponse(this Account account)
     {
         return new AccountResponse(account.Id);

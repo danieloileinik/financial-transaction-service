@@ -10,7 +10,8 @@ using Xunit;
 
 namespace FinancialTransactionService.Tests.Integration;
 
-public class AdminAccountControllerTests(CustomWebApplicationFactory factory) : IClassFixture<CustomWebApplicationFactory>
+public class AdminAccountControllerTests(CustomWebApplicationFactory factory)
+    : IClassFixture<CustomWebApplicationFactory>
 {
     [Fact]
     public async Task CreateAccount_AsAdmin_Returns200WithAccountId()

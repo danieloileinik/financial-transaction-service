@@ -58,7 +58,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             entity.Property(t => t.Id).ValueGeneratedNever();
 
             entity.Property(t => t.AccountId);
-            entity.Property(t => t.Timestamp).IsRequired();
+            entity.Property(t => t.Timestamp).HasColumnType("timestamp with time zone").IsRequired();
 
             entity
                 .Property(t => t.Amount)

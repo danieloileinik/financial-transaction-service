@@ -1,5 +1,6 @@
 #nullable enable
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using FinancialTransactionService.Application.Abstractions.Security;
 using FinancialTransactionService.Infrastructure.Persistence;
@@ -9,7 +10,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Testcontainers.PostgreSql;
 using Xunit;
 
@@ -29,6 +29,12 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>, IAsyn
             .Build();
 
         await _postgresContainer.StartAsync();
+
+        using var scope = Services.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+        // await db.Database.EnsureDeletedAsync();
+        await db.Database.MigrateAsync();
     }
 
     public new async Task DisposeAsync()
@@ -40,13 +46,17 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>, IAsyn
     {
         builder.ConfigureServices(services =>
         {
-            services.RemoveAll(typeof(DbContextOptions<AppDbContext>));
-            services.RemoveAll(typeof(AppDbContext));
+            var dbDescriptors = services
+                .Where(d => d.ServiceType.Namespace?.Contains("EntityFrameworkCore") == true
+                            || d.ServiceType == typeof(AppDbContext))
+                .ToList();
+
+            foreach (var d in dbDescriptors) services.Remove(d);
 
             var connectionString = _postgresContainer?.GetConnectionString()
                                    ?? "Host=localhost;Port=5432;Database=testdb;Username=testuser;Password=testpass";
 
-            services.AddDbContextPool<AppDbContext>(options => { options.UseNpgsql(connectionString); });
+            services.AddDbContext<AppDbContext>(options => { options.UseNpgsql(connectionString); });
 
             services.AddSingleton<ISystemPasswordProvider>(_ => new SystemPasswordProvider("TestAdminPassword"));
         });
