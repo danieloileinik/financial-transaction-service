@@ -145,8 +145,9 @@ Response (400 Bad Request):
 ```json
 
 "Request body is required"
-Account Operations
 ```
+
+Account Operations
 All endpoints in this section require a valid user JWT token. The token must include the account ID in the claims.
 Get Balance
 
