@@ -10,7 +10,7 @@ namespace FinancialTransactionService.Presentation.Controllers;
 [Authorize(Policy = "AdminOnly")]
 [ApiController]
 [Route("api/admin/accounts")]
-public class AdminController(
+public class AdminAccountController(
     DeleteAccountHandler deleteAccountHandler,
     CreateAccountHandler createAccountHandler,
     LockAccountHandler lockAccountHandler,
