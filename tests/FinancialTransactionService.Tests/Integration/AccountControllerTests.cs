@@ -22,7 +22,7 @@ public class AccountControllerTests(CustomWebApplicationFactory factory) : IClas
         var client = factory.CreateAuthenticatedUser(accountId);
 
         // Act
-        var response = await client.GetAsync("/api/account/balance");
+        var response = await client.GetAsync("/api/accounts/balance");
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -39,7 +39,7 @@ public class AccountControllerTests(CustomWebApplicationFactory factory) : IClas
         var request = new MoneyOperationRequest(500m);
 
         // Act
-        var response = await client.PostAsJsonAsync("/api/account/deposit/atm", request);
+        var response = await client.PostAsJsonAsync("/api/accounts/deposit/atm", request);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.NoContent);
@@ -69,7 +69,7 @@ public class AccountControllerTests(CustomWebApplicationFactory factory) : IClas
         var request = new TransferRequest(receiverId, new MoneyOperationRequest(300m));
 
         // Act
-        var response = await client.PostAsJsonAsync("/api/account/transfer", request);
+        var response = await client.PostAsJsonAsync("/api/accounts/transfer", request);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.NoContent);
@@ -91,7 +91,7 @@ public class AccountControllerTests(CustomWebApplicationFactory factory) : IClas
         var request = new TransferRequest(receiverId, new MoneyOperationRequest(500m)); // Balance 0
 
         // Act
-        var response = await client.PostAsJsonAsync("/api/account/transfer", request);
+        var response = await client.PostAsJsonAsync("/api/accounts/transfer", request);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.Forbidden); // Assuming ErrorHandler returns 403 for Forbidden
@@ -114,7 +114,7 @@ public class AccountControllerTests(CustomWebApplicationFactory factory) : IClas
         var request = new TransferRequest(fakeReceiverId, new MoneyOperationRequest(200m));
 
         // Act
-        var response = await client.PostAsJsonAsync("/api/account/transfer", request);
+        var response = await client.PostAsJsonAsync("/api/accounts/transfer", request);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -129,7 +129,7 @@ public class AccountControllerTests(CustomWebApplicationFactory factory) : IClas
         var client = factory.CreateAuthenticatedUser(accountId);
 
         // Act
-        var response = await client.GetAsync("/api/account/transactions");
+        var response = await client.GetAsync("/api/accounts/transactions");
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
