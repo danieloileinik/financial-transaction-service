@@ -2,17 +2,6 @@
 
 A robust financial transaction management system built with .NET, following Domain-Driven Design (DDD) and Clean Architecture principles.
 
-## Table of Contents
-- [Architecture](#architecture)
-- [Technologies](#technologies)
-- [Getting Started](#getting-started)
-- [API Documentation](#api-documentation)
-    - [Authentication](#authentication)
-    - [Account Operations](#account-operations)
-    - [Admin Operations](#admin-operations)
-- [Testing](#testing)
-- [Database Schema](#database-schema)
-
 ## Architecture
 
 The project follows Clean Architecture with the following layers:
@@ -43,7 +32,7 @@ The project follows Clean Architecture with the following layers:
 
 ### Configuration
 
-Create an `appsettings.```json` file with the following structure:
+Create an `appsettings.json` file with the following structure:
 
 ```json
 {
