@@ -1,659 +1,514 @@
-# Financial Transaction Service
+# Financial Transaction Service — API Reference
 
-A robust financial transaction management system built with .NET, following Domain-Driven Design (DDD) and Clean Architecture principles.
+Authentication: `Authorization: Bearer <token>` header required on all protected endpoints.
 
-## Architecture
+---
 
-The project follows Clean Architecture with the following layers:
+## Authentication
 
-- **Domain**: Core business logic, entities, value objects, and domain errors
-- **Application**: Use cases, DTOs, and application services
-- **Infrastructure**: Data persistence, external services, and implementations
-- **Presentation**: API controllers and request/response handling
+### POST /api/auth/user/atm
 
-## Technologies
+Authenticate via PIN (ATM flow). Returns a signed JWT.
 
-- .NET 10
-- Entity Framework Core 8
-- PostgreSQL with Npgsql
-- JWT Authentication
-- BCrypt for password hashing
-- FluentAssertions for testing
-- Testcontainers for integration tests
-- xUnit for unit and integration testing
+**Request:**
 
-## Getting Started
-
-### Prerequisites
-
-- .NET 10 SDK
-- Docker (for running PostgreSQL in development)
-- PostgreSQL 15+ (if running locally)
-
-### Configuration
-
-Create an `appsettings.json` file with the following structure:
-
-```json
-{
-  "ConnectionStrings": {
-    "DefaultConnection": "Host=localhost;Port=5432;Database=financialdb;Username=postgres;Password=yourpassword"
-  },
-  "JwtSettings": {
-    "Issuer": "FinancialTransactionService",
-    "Audience": "FinancialTransactionService",
-    "SecretKey": "your-256-bit-secret-key-minimum-32-characters",
-    "ExpirationMinutes": 60
-  },
-  "AdminPassword": "your-secure-admin-password"
-}
-```
-Running the Application
-bash
-
-# Restore dependencies
-dotnet restore
-
-# Run migrations
-dotnet ef database update --project src/FinancialTransactionService.Infrastructure --startup-project src/FinancialTransactionService.Presentation
-
-# Run the application
-dotnet run --project src/FinancialTransactionService.Presentation
-
-Running Tests
-bash
-
-dotnet test
-
-
-User ATM Authentication
-
-Authenticates a user via ATM interface using account ID and PIN code.
-
-Endpoint: POST /api/auth/user/atm
-
-Request Body:
-```json
+```http
+POST /api/auth/user/atm
+Content-Type: application/json
 
 {
   "accountId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
   "pin": "1234"
 }
 ```
-Response (200 OK):
+
+**Response 200:**
+
 ```text
-
-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjNmYTg1ZjY0LTU3MTctNDU2Mi1iM2ZjLTJjOTYzZjY2YWZhNiIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IlVzZXIiLCJleHAiOjE3MDAwMDAwMDB9.signature
+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
 ```
-Response (401 Unauthorized):
-```json
 
+**Response 401:**
+
+```text
 "Incorrect pin code"
 ```
-Response (400 Bad Request):
-```json
 
-"Invalid pin code format"
-```
-User Online Authentication
+---
 
-Authenticates a user via online interface using account ID and password.
+### POST /api/auth/user/online
 
-Endpoint: POST /api/auth/user/online
+Authenticate via password (online banking flow). Returns a signed JWT.
 
-Request Body:
-```json
+**Request:**
 
+```http
+POST /api/auth/user/online
+Content-Type: application/json
 {
   "accountId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-  "password": "userpassword123"
+  "password": "MySecurePass123"
 }
 ```
-Response (200 OK):
-```text
 
-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjNmYTg1ZjY0LTU3MTctNDU2Mi1iM2ZjLTJjOTYzZjY2YWZhNiIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IlVzZXIiLCJleHAiOjE3MDAwMDAwMDB9.signature
+**Response 200:**
+
+```text
+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
 ```
-Response (401 Unauthorized):
+
+**Response 401:**
+
 ```text
 "Incorrect password"
 ```
-Admin Authentication
 
-Authenticates as an administrator.
+---
 
-Endpoint: POST /api/auth/admin
+### POST /api/auth/admin
 
-Request Body:
-```json
+Authenticate as administrator. Returns a signed admin JWT.
 
+**Request:**
+
+```http
+POST /api/auth/admin
+Content-Type: application/json
 {
-  "password": "admin-password"
+  "password": "AdminPassword"
 }
 ```
-Response (200 OK):
+
+**Response 200:**
+
 ```text
-
-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJBZG1pbiIsImV4cCI6MTcwMDAwMDAwMH0.signature
+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
 ```
-Response (401 Unauthorized):
-```json
 
+**Response 401:**
+
+```text
 "Invalid admin password"
 ```
-Response (400 Bad Request):
-```json
 
-"Request body is required"
+---
+
+## Account (User)
+
+> All endpoints require `Authorization: Bearer <user-token>`
+
+### GET /api/accounts/balance
+
+Returns the current balance of the authenticated account.
+
+**Request:**
+
+```http
+GET /api/accounts/balance
+Authorization: Bearer <token>
 ```
 
-Account Operations
-All endpoints in this section require a valid user JWT token. The token must include the account ID in the claims.
-Get Balance
+**Response 200:**
 
-Retrieves the current balance of the authenticated account.
-
-Endpoint: GET /api/accounts/balance
-
-Headers:
-```text
-
-Authorization: Bearer {user_jwt_token}
-```
-Response (200 OK):
 ```json
-
 {
-  "balance": 1250.50
+  "balance": 1500.00
 }
 ```
-Response (404 Not Found):
-```json
 
+**Response 404:**
+
+```text
 "Account with ID:3fa85f64-5717-4562-b3fc-2c963f66afa6 not found"
 ```
-Get Transaction History
 
-Retrieves transaction history for the authenticated account.
+---
 
-Endpoint: GET /api/accounts/transactions
+### GET /api/accounts/transactions
 
-Query Parameters:
+Returns transaction history. Optional date range filter via query params.
 
-    From (optional): Start date and time (ISO 8601 format)
+**Request:**
 
-    To (optional): End date and time (ISO 8601 format)
-
-Headers:
-```text
-
-Authorization: Bearer {user_jwt_token}
+```http
+GET /api/accounts/transactions?from=2024-01-01T00:00:00Z&to=2024-12-31T23:59:59Z
+Authorization: Bearer <token>
 ```
-Request Example:
-```text
 
-GET /api/accounts/transactions?From=2024-01-01T00:00:00Z&To=2024-12-31T23:59:59Z
-```
-Response (200 OK):
+**Response 200:**
+
 ```json
-
 {
   "transactions": [
     {
       "type": "Deposit",
-      "amount": 500.00,
-      "timestamp": "2024-01-15T10:30:00Z"
+      "amount": 1000.00,
+      "timestamp": "2024-06-15T10:30:00+00:00"
     },
     {
       "type": "Withdraw",
-      "amount": 100.00,
-      "timestamp": "2024-01-16T14:20:00Z"
+      "amount": 250.00,
+      "timestamp": "2024-06-16T14:00:00+00:00"
     }
   ]
 }
 ```
-Response (404 Not Found):
-```json
 
+**Response 404:**
+
+```text
 "Account with ID:3fa85f64-5717-4562-b3fc-2c963f66afa6 not found"
 ```
-Set PIN Code
 
-Sets or updates the PIN code for the account.
+---
 
-Endpoint: PUT /api/accounts/pin
+### POST /api/accounts/deposit/atm
 
-Headers:
-```text
+Deposit money into the authenticated account.
 
-Authorization: Bearer {user_jwt_token}
-```
-Request Body:
-```json
+**Request:**
 
-{
-  "pin": "1234"
-}
-```
-Response (204 No Content): (No response body)
-
-Response (400 Bad Request):
-```json
-
-"Invalid pin code format"
-
-Response (404 Not Found):
-```json
-
-"Account with ID:3fa85f64-5717-4562-b3fc-2c963f66afa6 not found"
-```
-Set Password
-
-Sets the initial password for the account.
-
-Endpoint: PUT /api/accounts/password/set
-
-Headers:
-```text
-
-Authorization: Bearer {user_jwt_token}
-```
-Request Body:
-```json
-
-{
-  "password": "newpassword123"
-}
-```
-Response (204 No Content): (No response body)
-
-Response (404 Not Found):
-```json
-
-"Account with ID:3fa85f64-5717-4562-b3fc-2c963f66afa6 not found"
-````
-Change Password
-
-Changes the account password.
-
-Endpoint: PUT /api/accounts/password/change
-
-Headers:
-```text
-
-Authorization: Bearer {user_jwt_token}
-```
-Request Body:
-```json
-
-{
-  "oldPassword": "oldpassword123",
-  "newPassword": "newpassword456"
-}
-```
-Response (204 No Content): (No response body)
-
-Response (401 Unauthorized):
-```json
-
-"Incorrect password"
-```
-Response (404 Not Found):
-```json
-
-"Account with ID:3fa85f64-5717-4562-b3fc-2c963f66afa6 not found"
-```
-Deposit Money
-
-Deposits money into the account.
-
-Endpoint: POST /api/accounts/deposit/atm
-
-Headers:
-```text
-
-Authorization: Bearer {user_jwt_token}
-```
-Request Body:
-```json
-
+```http
+POST /api/accounts/deposit/atm
+Authorization: Bearer <token>
+Content-Type: application/json
 {
   "amount": 500.00
 }
 ```
-Response (204 No Content): (No response body)
 
-Response (400 Bad Request):
-```json
+**Response 204:** No content
 
-"The amount of money is out of range"
-```
-Response (403 Forbidden):
-```json
+**Response 403:**
 
+```text
 "Account is locked"
 ```
-Response (404 Not Found):
-```json
 
-"Account with ID:3fa85f64-5717-4562-b3fc-2c963f66afa6 not found"
-```
-Withdraw Money
+**Response 400:**
 
-Withdraws money from the account.
-
-Endpoint: POST /api/accounts/withdraw/atm
-```
-Headers:
 ```text
-
-Authorization: Bearer {user_jwt_token}
+"The amount of money is out of range"
 ```
-Request Body:
-```json
 
+---
+
+### POST /api/accounts/withdraw/atm
+
+Withdraw money from the authenticated account.
+
+**Request:**
+
+```http
+POST /api/accounts/withdraw/atm
+Authorization: Bearer <token>
+Content-Type: application/json
 {
-  "amount": 100.00
+  "amount": 200.00
 }
 ```
-Response (204 No Content): (No response body)
 
-Response (400 Bad Request):
-```json
+**Response 204:** No content
 
-"The amount of money is out of range"
+**Response 403:**
+
+```text
+"Insufficient funds"
 ```
-Response (403 Forbidden):
-```json
 
+**Response 403:**
+
+```text
 "Account is locked"
 ```
-Response (403 Forbidden):
-```json
 
-"Insufficient funds"
+---
 
-Response (404 Not Found):
-```json
+### POST /api/accounts/transfer
 
-"Account with ID:3fa85f64-5717-4562-b3fc-2c963f66afa6 not found"
-```
-Transfer Money
+Transfer money to another account.
 
-Transfers money to another account.
+**Request:**
 
-Endpoint: POST /api/accounts/transfer
-
-Headers:
-```text
-
-Authorization: Bearer {user_jwt_token}
-```
-Request Body:
-```json
-
+```http
+POST /api/accounts/transfer
+Authorization: Bearer <token>
+Content-Type: application/json
 {
-  "receiverId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "receiverId": "9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d",
   "amount": {
-    "amount": 250.00
+    "amount": 300.00
   }
 }
 ```
-Response (204 No Content): (No response body)
 
-Response (400 Bad Request):
-```json
+**Response 204:** No content
 
-"The amount of money is out of range"
+**Response 404:**
+
+```text
+"Account with ID:9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d not found"
 ```
-Response (403 Forbidden):
-```json
 
+**Response 403:**
+
+```text
 "Insufficient funds"
 ```
-Response (403 Forbidden):
-```json
 
-"Account is locked"
+---
+
+### PUT /api/accounts/pin
+
+Set or update the PIN code for the authenticated account.
+
+**Request:**
+
+```http
+PUT /api/accounts/pin
+Authorization: Bearer <token>
+Content-Type: application/json
+{
+  "pin": "5678"
+}
 ```
-Response (404 Not Found):
-```json
 
-"Account with ID:3fa85f64-5717-4562-b3fc-2c963f66afa6 not found"
-```
-Admin Operations
+**Response 204:** No content
 
-All endpoints in this section require an admin JWT token with the "Admin" role.
-Create Account
+**Response 400:**
 
-Creates a new account with automatically generated PIN and password.
-
-Endpoint: POST /api/admin/accounts
-
-Headers:
 ```text
-
-Authorization: Bearer {admin_jwt_token}
+"Invalid pin code format"
 ```
-Response (200 OK):
-```json
 
+---
+
+### PUT /api/accounts/password/set
+
+Set a password for the authenticated account.
+
+**Request:**
+
+```http
+PUT /api/accounts/password/set
+Authorization: Bearer <token>
+Content-Type: application/json
+{
+  "password": "NewPassword123"
+}
+```
+
+**Response 204:** No content
+
+---
+
+### PUT /api/accounts/password/change
+
+Change password by providing the current password.
+
+**Request:**
+
+```http
+PUT /api/accounts/password/change
+Authorization: Bearer <token>
+Content-Type: application/json
+{
+  "oldPassword": "OldPassword123",
+  "newPassword": "NewPassword456"
+}
+```
+
+**Response 204:** No content
+
+**Response 401:**
+
+```text
+"Incorrect password"
+```
+
+---
+
+## Admin
+
+> All endpoints require `Authorization: Bearer <admin-token>`
+
+### POST /api/admin/accounts
+
+Create a new bank account. PIN and password are auto-generated server-side.
+
+**Request:**
+
+```http
+POST /api/admin/accounts
+Authorization: Bearer <admin-token>
+```
+
+**Response 200:**
+
+```json
 {
   "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
 }
 ```
-Lock Account
 
-Locks an account, preventing any transactions.
+---
 
-Endpoint: POST /api/admin/accounts/{id}/lock
+### POST /api/admin/accounts/{id}/lock
 
-Headers:
-```text
+Lock an account, preventing all deposits and withdrawals.
 
-Authorization: Bearer {admin_jwt_token}
+**Request:**
+
+```http
+POST /api/admin/accounts/3fa85f64-5717-4562-b3fc-2c963f66afa6/lock
+Authorization: Bearer <admin-token>
 ```
-Path Parameters:
 
-    id: Account UUID
-Response (204 No Content): (No response body)
+**Response 204:** No content
 
-Response (404 Not Found):
-```json
+**Response 404:**
 
+```text
 "Account with ID:3fa85f64-5717-4562-b3fc-2c963f66afa6 not found"
 ```
-Unlock Account
 
-Unlocks a locked account.
+---
 
-Endpoint: POST /api/admin/accounts/{id}/unlock
+### POST /api/admin/accounts/{id}/unlock
 
-Headers:
-```text
+Unlock a previously locked account.
 
-Authorization: Bearer {admin_jwt_token}
+**Request:**
+
+```http
+POST /api/admin/accounts/3fa85f64-5717-4562-b3fc-2c963f66afa6/unlock
+Authorization: Bearer <admin-token>
 ```
-Path Parameters:
 
-    id: Account UUID
+**Response 204:** No content
 
-Response (204 No Content): (No response body)
+**Response 404:**
 
-Response (404 Not Found):
-```json
-
+```text
 "Account with ID:3fa85f64-5717-4562-b3fc-2c963f66afa6 not found"
 ```
-Delete Account
 
-Soft deletes an account.
+---
 
-Endpoint: DELETE /api/admin/accounts/{id}
+### DELETE /api/admin/accounts/{id}
 
-Headers:
-```text
+Soft-delete an account. Hidden from all queries but retained in the database.
 
-Authorization: Bearer {admin_jwt_token}
+**Request:**
+
+```http
+DELETE /api/admin/accounts/3fa85f64-5717-4562-b3fc-2c963f66afa6
+Authorization: Bearer <admin-token>
 ```
-Path Parameters:
 
-    id: Account UUID
+**Response 204:** No content
 
-Response (204 No Content): (No response body)
+**Response 404:**
 
-Response (404 Not Found):
-```json
-
+```text
 "Account with ID:3fa85f64-5717-4562-b3fc-2c963f66afa6 not found"
 ```
-Adjust Balance
 
-Adjusts account balance (positive for deposit, negative for withdrawal).
+---
 
-Endpoint: PUT /api/admin/accounts/{id}/balance
+### PUT /api/admin/accounts/{id}/balance
 
-Headers:
-```text
+Adjust account balance. Positive = deposit, negative = withdrawal.
 
-Authorization: Bearer {admin_jwt_token}
-```
-Path Parameters:
+**Request:**
 
-    id: Account UUID
-
-Request Body:
-```json
+```http
+PUT /api/admin/accounts/3fa85f64-5717-4562-b3fc-2c963f66afa6/balance
+Authorization: Bearer <admin-token>
+Content-Type: application/json
 
 {
-  "amount": 1000.00
+  "amount": -200.00
 }
 ```
-Response (204 No Content): (No response body)
 
-Response (400 Bad Request):
-```json
+**Response 204:** No content
 
-"The amount of money is out of range"
-```
-Response (403 Forbidden):
-```json
+**Response 403:**
 
-"Account is locked"
-```
-Response (403 Forbidden):
-```json
-
+```text
 "Insufficient funds"
 ```
-Response (404 Not Found):
-```json
 
+**Response 404:**
+
+```text
 "Account with ID:3fa85f64-5717-4562-b3fc-2c963f66afa6 not found"
 ```
-Get Account Transactions
 
-Retrieves transaction history for any account.
+---
 
-Endpoint: GET /api/admin/accounts/{id}/transactions
+### GET /api/admin/accounts/{id}/transactions
 
-Headers:
-```text
+View transaction history for any account. Supports optional date range filter.
 
-Authorization: Bearer {admin_jwt_token}
+**Request:**
+
+```http
+GET /api/admin/accounts/3fa85f64-5717-4562-b3fc-2c963f66afa6/transactions?from=2024-01-01T00:00:00Z&to=2024-12-31T23:59:59Z
+Authorization: Bearer <admin-token>
 ```
-Path Parameters:
 
-    id: Account UUID
+**Response 200:**
 
-Query Parameters:
-
-    From (optional): Start date and time (ISO 8601 format)
-
-    To (optional): End date and time (ISO 8601 format)
-
-Request Example:
-```text
-
-GET /api/admin/accounts/3fa85f64-5717-4562-b3fc-2c963f66afa6/transactions?From=2024-01-01T00:00:00Z&To=2024-12-31T23:59:59Z
-```
-Response (200 OK):
 ```json
-
 {
   "transactions": [
     {
       "type": "Deposit",
-      "amount": 500.00,
-      "timestamp": "2024-01-15T10:30:00Z"
-    },
-    {
-      "type": "Withdraw",
-      "amount": 100.00,
-      "timestamp": "2024-01-16T14:20:00Z"
+      "amount": 1000.00,
+      "timestamp": "2024-06-15T10:30:00+00:00"
     }
   ]
 }
 ```
 
-Response (404 Not Found):
-```json
+**Response 404:**
 
+```text
 "Account with ID:3fa85f64-5717-4562-b3fc-2c963f66afa6 not found"
 ```
-Testing
 
-The project includes comprehensive unit and integration tests:
-Unit Tests
+---
 
-Located in FinancialTransactionService.Tests/Unit/, these tests cover domain logic without external dependencies.
-Integration Tests
+## Health Check
 
-Located in FinancialTransactionService.Tests/Integration/, these tests use Testcontainers to spin up a real PostgreSQL database.
+### GET /health
 
-To run tests:
-bash
+No authentication required.
 
-dotnet test
+**Request:**
 
-Database Schema
-Accounts Table
-Column	Type	Description
-Id	UUID	Primary key
-Balance	DECIMAL(18,2)	Current account balance
-IsLocked	BOOLEAN	Account lock status
-IsDeleted	BOOLEAN	Soft delete flag
-PasswordHash	```text	Hashed password (optional)
-PinCode	VARCHAR(4)	PIN code (optional)
-Transactions Table
-Column	Type	Description
-Id	UUID	Primary key
-AccountId	UUID	Foreign key to Accounts
-Amount	DECIMAL(18,2)	Transaction amount
-Timestamp	TIMESTAMPTZ	Transaction timestamp (UTC)
-TransactionType	VARCHAR(13)	Discriminator: "Deposit" or "Withdraw"
-Indexes
+```http
+GET /health
+```
 
-    IX_Transactions_AccountId: For filtering transactions by account
+**Response 200:**
 
-    IX_Transactions_AccountId_Timestamp: For efficient date-range queries
+```text
+OK
+```
 
-Error Handling
+---
 
-The API uses the ErrorOr library and returns appropriate HTTP status codes:
+## Error Reference
 
-    200 OK: Successful operation with response body
-
-    204 No Content: Successful operation without response body
-
-    400 Bad Request: Validation errors
-
-    401 Unauthorized: Authentication required or invalid credentials
-
-    403 Forbidden: Insufficient permissions (locked account, insufficient funds)
-
-    404 Not Found: Resource not found
-
-    500 Internal Server Error: Unexpected server error
-
-
+| Status | Meaning                                          |
+|--------|--------------------------------------------------|
+| 200    | OK — request succeeded, body contains result     |
+| 204    | No Content — request succeeded, no body          |
+| 400    | Bad Request — invalid input                      |
+| 401    | Unauthorized — wrong password or PIN             |
+| 403    | Forbidden — account locked or insufficient funds |
+| 404    | Not Found — account does not exist               |
+| 500    | Internal Server Error                            |
