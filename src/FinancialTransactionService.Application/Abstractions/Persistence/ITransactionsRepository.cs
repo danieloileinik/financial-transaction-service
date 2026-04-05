@@ -9,6 +9,6 @@ public interface ITransactionsRepository
 
     Task<IReadOnlyList<Transaction>> GetHistoryAsync(
         Guid accountId,
-        TransactionsRequest? request = null,
+        TransactionRequest? request = null,
         CancellationToken ct = default);
 }

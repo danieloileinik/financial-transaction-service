@@ -10,6 +10,6 @@ public class ViewBalanceHandler(IAccountRepository accountRepository)
     public async Task<ErrorOr<BalanceResponse>> Execute(Guid id, CancellationToken ct = default)
     {
         var balance = await accountRepository.GetBalanceAsync(id, ct);
-        return balance is null ? AccountErrors.NotFound(id) : balance;
+        return balance is null ? AccountErrors.NotFound(id) : (ErrorOr<BalanceResponse>)balance;
     }
 }

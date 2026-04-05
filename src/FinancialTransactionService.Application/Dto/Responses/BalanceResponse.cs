@@ -1,6 +1,6 @@
 ﻿namespace FinancialTransactionService.Application.Dto.Responses;
 
-public class BalanceResponse
+public record BalanceResponse
 {
     public BalanceResponse(decimal balance)
     {
@@ -13,16 +13,3 @@ public class BalanceResponse
 
     public decimal Balance { get; }
 }
-// public readonly record struct BalanceResponse
-// {
-//     public BalanceResponse(decimal balance)
-//     {
-//         Balance = balance;
-//     }
-//
-//     public BalanceResponse()
-//     {
-//     }
-//
-//     public decimal Balance { get; }
-// }

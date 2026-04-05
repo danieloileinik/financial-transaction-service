@@ -62,7 +62,7 @@ public class AdminAccountController(
     [HttpGet("{id:guid}/transactions")]
     public async Task<ActionResult<TransactionsResponse>> GetAccountTransactions(
         Guid id,
-        [FromQuery] TransactionsRequest? request = null,
+        [FromQuery] TransactionRequest? request = null,
         CancellationToken ct = default)
     {
         var result = await viewTransactionsHandler.Execute(id, request, ct);
