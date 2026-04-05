@@ -4,7 +4,3 @@ public record TransactionsResponse(IReadOnlyList<TransactionsResponse.Transactio
 {
     public record TransactionResponse(string Type, decimal Amount, DateTimeOffset Timestamp);
 }
-// public readonly record struct TransactionsResponse(IReadOnlyList<TransactionsResponse.TransactionResponse> Transactions)
-// {
-//     public readonly record  struct TransactionResponse(string Type, decimal Amount, DateTimeOffset Timestamp);
-// }

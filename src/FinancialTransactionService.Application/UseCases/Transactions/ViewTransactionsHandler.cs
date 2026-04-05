@@ -13,7 +13,7 @@ public class ViewTransactionsHandler(
 {
     public async Task<ErrorOr<TransactionsResponse>> Execute(
         Guid accountId,
-        TransactionsRequest? request = null,
+        TransactionRequest? request = null,
         CancellationToken ct = default)
     {
         var account = await accountRepository.GetByIdAsync(accountId, ct);
