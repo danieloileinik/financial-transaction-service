@@ -20,7 +20,8 @@ public class AccountController(
     TransferMoneyHandler transferMoneyHandler,
     SetPinHandler setPinHandler,
     SetPasswordHandler setPasswordHandler,
-    ChangePasswordHandler changePasswordHandler) : ControllerBase
+    ChangePasswordHandler changePasswordHandler,
+    CreateAccountHandler createAccountHandler) : ControllerBase
 {
     private Guid AccountId
     {
@@ -100,5 +101,15 @@ public class AccountController(
     {
         var result = await transferMoneyHandler.Execute(AccountId, request, ct);
         return result.IsError ? ErrorHandler.Handle(result) : NoContent();
+    }
+
+    [AllowAnonymous]
+    [HttpPost("register")]
+    public async Task<ActionResult<AccountResponse>> Register(
+        [FromBody] RegisterRequest request,
+        [FromQuery] CancellationToken ct = default)
+    {
+        var result = await createAccountHandler.Execute(request, ct);
+        return result.IsError ? ErrorHandler.Handle(result) : Ok(result.Value);
     }
 }
