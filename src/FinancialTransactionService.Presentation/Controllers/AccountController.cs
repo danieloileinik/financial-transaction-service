@@ -20,8 +20,7 @@ public class AccountController(
     TransferMoneyHandler transferMoneyHandler,
     SetPinHandler setPinHandler,
     SetPasswordHandler setPasswordHandler,
-    ChangePasswordHandler changePasswordHandler,
-    DeleteAccountHandler deleteAccountHandler) : ControllerBase
+    ChangePasswordHandler changePasswordHandler) : ControllerBase
 {
     private Guid AccountId
     {

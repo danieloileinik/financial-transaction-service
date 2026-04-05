@@ -13,10 +13,10 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-
+        modelBuilder.HasDefaultSchema("public");
         modelBuilder.Entity<Account>(entity =>
         {
-            entity.ToTable("Accounts");
+            entity.ToTable("accounts");
             entity.HasKey(a => a.Id);
             entity.Property(a => a.Id).ValueGeneratedNever();
             entity.Property<bool>("IsDeleted");
@@ -52,7 +52,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
 
         modelBuilder.Entity<Transaction>(entity =>
         {
-            entity.ToTable("Transactions");
+            entity.ToTable("transactions");
 
             entity.HasKey(t => t.Id);
             entity.Property(t => t.Id).ValueGeneratedNever();

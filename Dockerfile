@@ -3,19 +3,19 @@
 WORKDIR /app
 
 COPY FinancialTransactionService.sln .
-COPY src/Domain/Domain.csproj src/Domain/
-COPY src/Application/Application.csproj src/Application/
-COPY src/Infrastructure/Infrastructure.csproj src/Infrastructure/
-COPY src/Presentation/Presentation.csproj src/Presentation/
+COPY src/FinancialTransactionService.Domain/FinancialTransactionService.Domain.csproj src/FinancialTransactionService.Domain/
+COPY src/FinancialTransactionService.Application/FinancialTransactionService.Application.csproj src/FinancialTransactionService.Application/
+COPY src/FinancialTransactionService.Infrastructure/FinancialTransactionService.Infrastructure.csproj src/FinancialTransactionService.Infrastructure/
+COPY src/FinancialTransactionService.Presentation/FinancialTransactionService.Presentation.csproj src/FinancialTransactionService.Presentation/
 
-RUN dotnet restore src/Presentation/Presentation.csproj
-
+RUN dotnet restore src/FinancialTransactionService.Presentation/FinancialTransactionService.Presentation.csproj
 COPY src/ ./src/
 
-WORKDIR /app/src/Presentation
-RUN dotnet publish Presentation.csproj -c Release -o /app/publish
+WORKDIR /app/src/FinancialTransactionService.Presentation
+RUN dotnet publish FinancialTransactionService.Presentation.csproj -c Release -o /app/publish
 
 FROM mcr.microsoft.com/dotnet/aspnet:10.0
+RUN apt-get update && apt-get install -y libgssapi-krb5-2 && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
@@ -23,4 +23,4 @@ COPY --from=build /app/publish .
 
 EXPOSE 8080
 
-ENTRYPOINT ["dotnet", "Presentation.dll"]
+ENTRYPOINT ["dotnet", "FinancialTransactionService.Presentation.dll"]
