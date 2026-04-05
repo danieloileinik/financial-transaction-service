@@ -17,6 +17,7 @@ namespace FinancialTransactionService.Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
+                .HasDefaultSchema("public")
                 .HasAnnotation("ProductVersion", "10.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
@@ -49,7 +50,7 @@ namespace FinancialTransactionService.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Accounts", (string)null);
+                    b.ToTable("accounts", "public");
                 });
 
             modelBuilder.Entity("FinancialTransactionService.Domain.Models.Transaction", b =>
@@ -79,7 +80,7 @@ namespace FinancialTransactionService.Infrastructure.Migrations
                     b.HasIndex("AccountId", "Timestamp")
                         .IsDescending();
 
-                    b.ToTable("Transactions", (string)null);
+                    b.ToTable("transactions", "public");
 
                     b.HasDiscriminator<string>("TransactionType").HasValue("Transaction");
 

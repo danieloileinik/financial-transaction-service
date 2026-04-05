@@ -1,18 +1,10 @@
-version: '3.8'
+version: '3.9'
 
 services:
-  financial-api:
-    image: financial-api:latest
+  finservice:
+    image: finservice:latest
     ports:
       - "8080:8080"
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Production
-      - ConnectionStrings__DefaultConnection=${CONNECTION_STRING}
-      - JwtSettings__Issuer=${JWT_ISSUER}
-      - JwtSettings__Audience=${JWT_AUDIENCE}
-      - JwtSettings__SecretKey=${JWT_SECRET_KEY}
-      - JwtSettings__ExpirationMinutes=${JWT_EXPIRATION_MINUTES}
-      - AdminPassword=${ADMIN_PASSWORD}
     env_file:
       - .env.production
     restart: unless-stopped
