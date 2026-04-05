@@ -1,5 +1,6 @@
 using ErrorOr;
 using FinancialTransactionService.Application.Abstractions.Persistence;
+using FinancialTransactionService.Application.Dto.Requests;
 using FinancialTransactionService.Application.Dto.Responses;
 using FinancialTransactionService.Application.Extensions;
 using FinancialTransactionService.Domain;
@@ -13,6 +14,23 @@ public class CreateAccountHandler(
     IPasswordHasher passwordHasher,
     IUnitOfWork unitOfWork)
 {
+    public async Task<ErrorOr<AccountResponse>> Execute(
+        RegisterRequest request,
+        CancellationToken ct = default)
+    {
+        var pin = PinCode.Create(request.Pin);
+        if (pin.IsError) return pin.FirstError;
+
+        var account = new Account();
+        account.SetPin(pin.Value);
+        account.SetPassword(request.Password, passwordHasher);
+
+        accountRepository.Add(account);
+        await unitOfWork.SaveChangesAsync(ct);
+
+        return account.ToResponse();
+    }
+
     public async Task<ErrorOr<AccountResponse>> Execute(CancellationToken ct = default)
     {
         var account = new Account();
