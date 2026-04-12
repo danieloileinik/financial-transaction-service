@@ -1,8 +1,4 @@
-#nullable enable
-using System;
-using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Threading.Tasks;
 using FinancialTransactionService.Application.Abstractions.Security;
 using FinancialTransactionService.Domain;
 using FinancialTransactionService.Domain.Models;
@@ -10,7 +6,7 @@ using FinancialTransactionService.Domain.ValueObjects;
 using FinancialTransactionService.Infrastructure.Persistence;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace FinancialTransactionService.Tests;
+namespace FinancialTransactionService.IntegrationTests;
 
 public static class TestExtensions
 {
