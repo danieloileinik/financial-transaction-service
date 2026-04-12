@@ -1,7 +1,3 @@
-#nullable enable
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 using FinancialTransactionService.Application.Abstractions.Security;
 using FinancialTransactionService.Infrastructure.Persistence;
 using FinancialTransactionService.Infrastructure.Security;
@@ -13,7 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Testcontainers.PostgreSql;
 using Xunit;
 
-namespace FinancialTransactionService.Tests;
+namespace FinancialTransactionService.IntegrationTests;
 
 public class CustomWebApplicationFactory : WebApplicationFactory<Program>, IAsyncLifetime
 {

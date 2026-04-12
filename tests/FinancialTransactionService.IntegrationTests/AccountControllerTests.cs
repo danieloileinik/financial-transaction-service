@@ -1,7 +1,5 @@
-using System;
 using System.Net;
 using System.Net.Http.Json;
-using System.Threading.Tasks;
 using FinancialTransactionService.Application.Dto.Requests;
 using FinancialTransactionService.Application.Dto.Responses;
 using FinancialTransactionService.Domain.ValueObjects;
@@ -10,7 +8,7 @@ using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
-namespace FinancialTransactionService.Tests.Integration;
+namespace FinancialTransactionService.IntegrationTests;
 
 public class AccountControllerTests(CustomWebApplicationFactory factory) : IClassFixture<CustomWebApplicationFactory>
 {

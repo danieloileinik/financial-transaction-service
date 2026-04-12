@@ -5,7 +5,7 @@ using FinancialTransactionService.Domain.ValueObjects;
 using FluentAssertions;
 using Xunit;
 
-namespace FinancialTransactionService.Tests.Unit;
+namespace FinancialTransactionService.Tests;
 
 public class AccountTests
 {

@@ -1,11 +1,10 @@
 using System.Net;
 using System.Net.Http.Json;
-using System.Threading.Tasks;
 using FinancialTransactionService.Application.Dto.Requests;
 using FluentAssertions;
 using Xunit;
 
-namespace FinancialTransactionService.Tests.Integration;
+namespace FinancialTransactionService.IntegrationTests;
 
 public class AuthControllerTests(CustomWebApplicationFactory factory) : IClassFixture<CustomWebApplicationFactory>
 {
