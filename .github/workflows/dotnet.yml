@@ -55,7 +55,7 @@ jobs:
             --env-file /opt/finservice/.env.production \
             ghcr.io/${{ github.repository }}:latest \
             dotnet ef database update \
-              --project src/Infrastructure/finservice.Infrastructure.Persistence \
-              --startup-project src/Presentation/finservice.Presentation.Grpc
+              --project src/FinancialTransactionService.Infrastructure \
+              --startup-project src/FinancialTransactionService.Presentation
           
           docker compose -f /opt/finservice/docker-compose.yml up -d
