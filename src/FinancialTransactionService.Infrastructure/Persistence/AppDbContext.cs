@@ -40,7 +40,6 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
                 .HasConversion(
                     p => p == null ? null : p.Value.Value,
                     v => v == null ? null : PinCode.Create(v).Value);
-
             entity
                 .Property<PasswordHash?>("_password")
                 .HasColumnName("PasswordHash")
