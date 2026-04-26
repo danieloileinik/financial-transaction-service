@@ -15,8 +15,8 @@ RUN dotnet restore src/FinancialTransactionService.Presentation/FinancialTransac
 COPY src/ ./src/
 
 RUN dotnet ef migrations bundle \
-    --project src/Infrastructure/ConversionReporter.Infrastructure.Persistence \
-    --startup-project src/Presentation/ConversionReporter.Presentation.Grpc \
+    --project src/Infrastructure/ConversionReporter.Infrastructure \
+    --startup-project src/Presentation/ConversionReporter.Presentation \
     -o /app/publish/efbundle
     
 WORKDIR /app/src/FinancialTransactionService.Presentation
