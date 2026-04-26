@@ -68,12 +68,7 @@ jobs:
             docker pull ghcr.io/${{ github.repository }}:latest
             docker-compose -f /opt/finservice/docker-compose.yml down
 
-            docker-compose -f /opt/finservice/docker-compose.yml up -d postgres
-
-            until docker-compose -f /opt/finservice/docker-compose.yml exec -T postgres pg_isready; do
-              sleep 1
-            done
-
+          
             docker run --rm \
               --network finservice_default \
               --env-file /opt/finservice/.env.production \
