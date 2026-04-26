@@ -77,9 +77,7 @@ jobs:
             docker run --rm \
               --network finservice_default \
               --env-file /opt/finservice/.env.production \
+              --entrypoint ./efbundle \
               ghcr.io/${{ github.repository }}:latest \
-              dotnet ef database update \
-                --project src/FinancialTransactionService.Infrastructure \
-                --startup-project src/FinancialTransactionService.Presentation
-
+    
             docker-compose -f /opt/finservice/docker-compose.yml up -d
