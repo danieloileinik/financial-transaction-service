@@ -1,6 +1,8 @@
 ﻿FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
-
 WORKDIR /app
+
+RUN dotnet tool install --global dotnet-ef
+ENV PATH="$PATH:/root/.dotnet/tools"
 
 COPY FinancialTransactionService.sln .
 COPY src/FinancialTransactionService.Domain/FinancialTransactionService.Domain.csproj src/FinancialTransactionService.Domain/
@@ -9,8 +11,14 @@ COPY src/FinancialTransactionService.Infrastructure/FinancialTransactionService.
 COPY src/FinancialTransactionService.Presentation/FinancialTransactionService.Presentation.csproj src/FinancialTransactionService.Presentation/
 
 RUN dotnet restore src/FinancialTransactionService.Presentation/FinancialTransactionService.Presentation.csproj
+
 COPY src/ ./src/
 
+RUN dotnet ef migrations bundle \
+    --project src/Infrastructure/ConversionReporter.Infrastructure.Persistence \
+    --startup-project src/Presentation/ConversionReporter.Presentation.Grpc \
+    -o /app/publish/efbundle
+    
 WORKDIR /app/src/FinancialTransactionService.Presentation
 RUN dotnet publish FinancialTransactionService.Presentation.csproj -c Release -o /app/publish
 
